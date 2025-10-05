@@ -16,10 +16,14 @@ This Project is inspired by classic pokemon game
     ./venv/Scripts/activate
     ```
 <<<<<<< HEAD
+<<<<<<< HEAD
 2. (Required) Install the required libraries
 =======
 2. (Required) Install the Pygame library by:
 >>>>>>> dc35baa (init)
+=======
+2. (Required) Install the required libraries
+>>>>>>> 48ad0ab (modify readme)
     ```bash
     pip install -r requirements.txt
     ```
