@@ -15,7 +15,11 @@ This Project is inspired by classic pokemon game
     # On windows
     ./venv/Scripts/activate
     ```
+<<<<<<< HEAD
 2. (Required) Install the required libraries
+=======
+2. (Required) Install the Pygame library by:
+>>>>>>> dc35baa (init)
     ```bash
     pip install -r requirements.txt
     ```
