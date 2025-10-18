@@ -2,8 +2,11 @@
 
 Score: 1 point
 
+<<<<<<< HEAD
 ![Alt Text](./Checkpoint2_gifs/Settings.gif)
 
+=======
+>>>>>>> 6826c16 (spec)
 - [ ] (0.5 points) Create a working checkboxes in setting scene
 - [ ] (0.5 points) Create a working slider in setting scene
 

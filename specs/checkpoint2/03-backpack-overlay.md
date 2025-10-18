@@ -2,8 +2,11 @@
 
 Score: 1 point
 
+<<<<<<< HEAD
 ![Alt Text](./Checkpoint2_gifs/Bag.gif)
 
+=======
+>>>>>>> 6826c16 (spec)
 Prequisite: [Overlay](01-overlay.md), [Setting-Overlay](04-setting-overlay.md)
 No points will be given if your prequisite is not full score!
 

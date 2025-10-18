@@ -10,7 +10,10 @@ Click a link in the Description column to open the detailed spec for each item. 
 - If we detect any plagiarism, you will receive a 0 score for the entire project.
 - If the game crashes when doing specific TODO, you will receive a 0 score for that TODO.
 - Each checkpoint has their own deadline. No points will be given if it exceed the deadline.
+<<<<<<< HEAD
 - It's required to use our template, therefore TA can easily grade your project.
+=======
+>>>>>>> 6826c16 (spec)
 
 ---
 
@@ -52,6 +55,7 @@ Some of the TODOs may have their own prequisite. If there is a prequisite and it
 | New Map | [New Map Spec](checkpoint3/01-new-map.md) | 1 |
 | Shop | [Shop Spec](checkpoint3/02-shop.md) | 2 |
 | Online Interaction | [Online Interaction Spec](checkpoint3/03-online-interaction.md) | 4 |
+<<<<<<< HEAD
 | Advance Battle | [Advance Battle Spec](checkpoint3/04-advance-battle.md) | 4 |
 | Minimap | [Minimap Spec](checkpoint3/05-minimap.md) | 2 |
 | Navigation | [Navigation Spec](checkpoint3/06-navigation.md) | 4 |
@@ -62,3 +66,8 @@ Note: The maximum score for this checkpoint is 15 points.
 
 ## Ranking
 TAs may select some of the students as a candidate for the best project, and will get the reward. So, make sure to become creative!
+=======
+| Better Environment | [Better Environment Spec](checkpoint3/04-better-environment.md) | 2 |
+| Minimap | [Minimap Spec](checkpoint3/05-minimap.md) | 2 |
+| Navigation | [Navigation Spec](checkpoint3/06-navigation.md) | 4 |
+>>>>>>> 6826c16 (spec)
