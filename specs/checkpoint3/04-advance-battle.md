@@ -7,10 +7,14 @@ Score: 4 points
     - For each element, they have their own strengths and weaknesses (e.g. Water is strong against Fire, Fire is strong against Grass, Grass is strong against Water)
     
 <<<<<<< HEAD
+<<<<<<< HEAD
 - [ ] (1 point) Player action can use 3 different items from the backpack. The required items are:
 =======
 - [ ] (1 point) In Battle Scene, one of the player action can use 3 different items from the backpack. The required items are:
 >>>>>>> 4a428cd (spec & exercise)
+=======
+- [ ] (1 point) Player action can use 3 different items from the backpack. The required items are:
+>>>>>>> 1295485 (update spec)
     - Heal Potion     : Heal your pokemon
     - Strength Potion : Increase your pokemon's attack power
     - Defense Potion  : Increase your pokemon's defense power (Reduce number of opponent's attack)
