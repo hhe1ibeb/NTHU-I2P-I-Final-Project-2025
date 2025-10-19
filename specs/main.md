@@ -56,6 +56,7 @@ Some of the TODOs may have their own prequisite. If there is a prequisite and it
 | Shop | [Shop Spec](checkpoint3/02-shop.md) | 2 |
 | Online Interaction | [Online Interaction Spec](checkpoint3/03-online-interaction.md) | 4 |
 <<<<<<< HEAD
+<<<<<<< HEAD
 | Advance Battle | [Advance Battle Spec](checkpoint3/04-advance-battle.md) | 4 |
 | Minimap | [Minimap Spec](checkpoint3/05-minimap.md) | 2 |
 | Navigation | [Navigation Spec](checkpoint3/06-navigation.md) | 4 |
@@ -71,3 +72,15 @@ TAs may select some of the students as a candidate for the best project, and wil
 | Minimap | [Minimap Spec](checkpoint3/05-minimap.md) | 2 |
 | Navigation | [Navigation Spec](checkpoint3/06-navigation.md) | 4 |
 >>>>>>> 6826c16 (spec)
+=======
+| Advance Battle | [Advance Battle Spec](checkpoint3/04-advance-battle.md) | 4 |
+| Minimap | [Minimap Spec](checkpoint3/05-minimap.md) | 2 |
+| Navigation | [Navigation Spec](checkpoint3/06-navigation.md) | 4 |
+
+Note: The maximum score for this checkpoint is 15 points.
+
+---
+
+## Ranking
+TAs may select some of the students as a candidate for the best project, and will get the reward. So, make sure to become creative!
+>>>>>>> 4a428cd (spec & exercise)
