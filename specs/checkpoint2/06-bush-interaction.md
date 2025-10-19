@@ -3,6 +3,9 @@
 Score: 2 point
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 16cabb6 (embedded gifs)
 ![Alt Text](./Checkpoint2_gifs/WildPokemon.gif)
 
 - [ ] (0.5 point) Player can interact with bush (either collide or pressing key)

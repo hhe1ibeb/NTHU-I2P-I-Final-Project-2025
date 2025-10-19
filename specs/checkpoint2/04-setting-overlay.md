@@ -3,10 +3,15 @@
 Score: 1 point
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 ![Alt Text](./Checkpoint2_gifs/Settings.gif)
 
 =======
 >>>>>>> 6826c16 (spec)
+=======
+![Alt Text](./Checkpoint2_gifs/Settings.gif)
+
+>>>>>>> 16cabb6 (embedded gifs)
 Prequisite: [Overlay](01-overlay.md), [Setting Components](02-setting-components.md)
 No points will be given if your prequisite is not full score!
 

@@ -3,6 +3,9 @@
 Score: 3 points
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 16cabb6 (embedded gifs)
 ![Alt Text](./Checkpoint2_gifs/Trainer.gif)
 
 - [ ] (0.25 point) If we stand in front of the NPC, a warning sign will appear.
