@@ -49,7 +49,10 @@ class Map:
         return any(rect.colliderect(r) for r in self._collision_map)
         
     def check_teleport(self, pos: Position) -> Teleport | None:
-        '''TODO: Teleportation'''
+        '''[TODO HACKATHON 6] 
+        Teleportation: Player can enter a building by walking into certain tiles defined inside saves/*.json, and the map will be changed
+        Hint: Maybe there is an way to switch the map using something from src/core/managers/game_manager.py called switch_... 
+        '''
         return None
 
     def _render_all_layers(self, target: pg.Surface) -> None:
