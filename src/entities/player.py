@@ -59,11 +59,6 @@ class Player(Entity):
     def to_dict(self) -> dict[str, object]:
         return super().to_dict()
     
-    @property
-    @override
-    def camera(self) -> PositionCamera:
-        return PositionCamera(int(self.position.x) - GameSettings.SCREEN_WIDTH // 2, int(self.position.y) - GameSettings.SCREEN_HEIGHT // 2)
-            
     @classmethod
     @override
     def from_dict(cls, data: dict[str, object], game_manager: GameManager) -> Player:
