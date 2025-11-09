@@ -53,6 +53,14 @@ class Map:
         Teleportation: Player can enter a building by walking into certain tiles defined inside saves/*.json, and the map will be changed
         Hint: Maybe there is an way to switch the map using something from src/core/managers/game_manager.py called switch_... 
         '''
+        player_tile_x = int(pos.x // GameSettings.TILE_SIZE)
+        player_tile_y = int(pos.y // GameSettings.TILE_SIZE)
+
+        for t in self.teleporters:
+            teleport_tile_x = int(t.pos.x // GameSettings.TILE_SIZE)
+            teleport_tile_y = int(t.pos.y // GameSettings.TILE_SIZE)
+            if player_tile_x == teleport_tile_x and player_tile_y == teleport_tile_y:
+                return t
         return None
 
     def _render_all_layers(self, target: pg.Surface) -> None:
@@ -85,6 +93,7 @@ class Map:
                         Append the collision rectangle to the rects[] array
                         Remember scale the rectangle with the TILE_SIZE from settings
                         '''
+                        rects.append(pg.Rect(x*GameSettings.TILE_SIZE, y*GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
                         pass
         return rects
 
