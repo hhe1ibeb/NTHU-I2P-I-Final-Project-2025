@@ -46,7 +46,7 @@ class Map:
         Return True if collide if rect param collide with self._collision_map
         Hint: use API colliderect and iterate each rectangle to check
         '''
-        return False
+        return any(rect.colliderect(r) for r in self._collision_map)
         
     def check_teleport(self, pos: Position) -> Teleport | None:
         '''[TODO HACKATHON 6] 
