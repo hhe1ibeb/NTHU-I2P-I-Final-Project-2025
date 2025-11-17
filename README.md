@@ -7,29 +7,35 @@ This Project is inspired by classic pokemon game
 ## Setup Project
 1. (Recommended) Install Python 3.12.x (We use 3.12.8) from the official Python website and create virtual environment
     ```bash
+    # On mac/linux
     python3.12 -m venv venv
+    # or
+    python3 -m venv venv
+    # On Windows 
+    python -m venv venv
+    # or
+    py -3.12 -m venv venv
     
     # On mac/linux
     source venv/bin/activate
-    
     # On windows
-    ./venv/Scripts/activate
+    Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+    ./venv/Scripts/activate.bat
     ```
-<<<<<<< HEAD
-<<<<<<< HEAD
 2. (Required) Install the required libraries
-=======
-2. (Required) Install the Pygame library by:
->>>>>>> dc35baa (init)
-=======
-2. (Required) Install the required libraries
->>>>>>> 48ad0ab (modify readme)
     ```bash
     pip install -r requirements.txt
     ```
 3. Run the game:
     ```bash
     python main.py
+    ```
+
+## Run the program as a module
+    Must have main file inside it
+    e.g. to run src/interface/components/button.py :
+    ```bash
+    python -m src.interface.components.button
     ```
     
 ## Setup Server for Online Play
