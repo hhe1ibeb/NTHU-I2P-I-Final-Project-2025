@@ -55,7 +55,6 @@ class Button(UIComponent):
                 self.on_click()
         else:
             self.img_button = self.img_button_default
-        pass
     
     @override
     def draw(self, screen: pg.Surface) -> None:
