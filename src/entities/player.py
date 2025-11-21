@@ -2,13 +2,12 @@ from __future__ import annotations
 import pygame as pg
 from .entity import Entity
 from src.core.services import input_manager
-from src.utils import Position, PositionCamera, GameSettings, Logger
+from src.utils import Position, PositionCamera, GameSettings, Logger, Direction
 from src.core import GameManager
-import math
 from typing import override
 
 class Player(Entity):
-    speed: float = 400.0
+    speed: float = 350.0
     game_manager: GameManager
 
     def __init__(self, x: float, y: float, game_manager: GameManager) -> None:
@@ -18,39 +17,18 @@ class Player(Entity):
     @override
     def update(self, dt: float) -> None:
         dis = Position(0, 0)
-        '''
-        [TODO HACKATHON 2]
-        Calculate the distance change, and then normalize the distance
-
-        [TODO HACKATHON 4]
-        Check if there is collision, if so try to make the movement smooth
-        Hint #1 : use entity.py _snap_to_grid function or create a similar function
-        Hint #2 : Beware of glitchy teleportation, you must do
-                    1. Update X
-                    2. If collide, snap to grid
-                    3. Update Y
-                    4. If collide, snap to grid
-                  instead of update both x, y, then snap to grid
-        
-        if input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a):
-            dis.x -= ...
-        if input_manager.key_down(pg.K_RIGHT) or input_manager.key_down(pg.K_d):
-            dis.x += ...
-        if input_manager.key_down(pg.K_UP) or input_manager.key_down(pg.K_w):
-            dis.y -= ...
-        if input_manager.key_down(pg.K_DOWN) or input_manager.key_down(pg.K_s):
-            dis.y += ...
-        
-        self.position = ...
-        '''
 
         if input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a):
+            self.direction = Direction.LEFT
             dis.x -= 1
         if input_manager.key_down(pg.K_RIGHT) or input_manager.key_down(pg.K_d):
+            self.direction = Direction.RIGHT
             dis.x += 1
         if input_manager.key_down(pg.K_UP) or input_manager.key_down(pg.K_w):
+            self.direction = Direction.UP
             dis.y -= 1
         if input_manager.key_down(pg.K_DOWN) or input_manager.key_down(pg.K_s):
+            self.direction = Direction.DOWN
             dis.y += 1
 
         if dis.x != 0 or dis.y != 0:

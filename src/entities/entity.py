@@ -26,6 +26,7 @@ class Entity:
 
     def update(self, dt: float) -> None:
         self.animation.update_pos(self.position)
+        self.animation.switch(self.direction.name.lower())
         self.animation.update(dt)
         
     def draw(self, screen: pg.Surface, camera: PositionCamera) -> None:
