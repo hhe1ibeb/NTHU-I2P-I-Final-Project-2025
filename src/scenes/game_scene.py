@@ -7,6 +7,8 @@ from src.core import GameManager, OnlineManager
 from src.utils import Logger, PositionCamera, GameSettings, Position
 from src.core.services import sound_manager
 from src.sprites import Sprite
+from src.interface.components import Button, Overlay
+from src.scenes.scene_components import create_settings_overlay, create_backpack_overlay
 from typing import override
 
 class GameScene(Scene):
@@ -14,6 +16,14 @@ class GameScene(Scene):
     online_manager: OnlineManager | None
     sprite_online: Sprite
     
+    # fixed buttons
+    backpack_button: Button
+    settings_button: Button
+
+    # overlays
+    backpack_overlay: Overlay
+    settings_overlay: Overlay
+
     def __init__(self):
         super().__init__()
         # Game Manager
@@ -29,6 +39,24 @@ class GameScene(Scene):
         else:
             self.online_manager = None
         self.sprite_online = Sprite("ingame_ui/options1.png", (GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
+
+        # fixed buttons
+        px, py = GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT // 2
+        self.backpack_button = Button(
+            "UI/button_backpack.png", "UI/button_backpack_hover.png",
+            px + 550, py - 350, 70, 70,
+            lambda: self.backpack_overlay.display(True)
+        )
+
+        self.settings_button = Button(
+            "UI/button_setting.png", "UI/button_setting_hover.png",
+            px + 470, py - 350, 70, 70,
+            lambda: self.settings_overlay.display(True)
+        )
+
+        # overlays
+        self.settings_overlay = create_settings_overlay(self.game_manager)
+        self.backpack_overlay = create_backpack_overlay(game_manager=self.game_manager)
         
         
     @override
@@ -55,7 +83,11 @@ class GameScene(Scene):
             
         # Update others
         self.game_manager.bag.update(dt)
-        
+        self.backpack_button.update(dt)
+        self.settings_button.update(dt)
+        self.backpack_overlay.update(dt)
+        self.settings_overlay.update(dt)
+
         if self.game_manager.player is not None and self.online_manager is not None:
             _ = self.online_manager.update(
                 self.game_manager.player.position.x, 
@@ -66,14 +98,6 @@ class GameScene(Scene):
     @override
     def draw(self, screen: pg.Surface):        
         if self.game_manager.player:
-            '''
-            [TODO HACKATHON 3]
-            Implement the camera algorithm logic here
-            Right now it's hard coded, you need to follow the player's positions
-            you may use the below example, but the function still incorrect, you may trace the entity.py
-            
-            camera = self.game_manager.player.camera
-            '''
             camera = self.game_manager.player.camera
             self.game_manager.current_map.draw(screen, camera)
             self.game_manager.player.draw(screen, camera)
@@ -84,6 +108,10 @@ class GameScene(Scene):
             enemy.draw(screen, camera)
 
         self.game_manager.bag.draw(screen)
+        self.backpack_button.draw(screen)
+        self.settings_button.draw(screen)
+        self.backpack_overlay.draw(screen)
+        self.settings_overlay.draw(screen)
         
         if self.online_manager and self.game_manager.player:
             list_online = self.online_manager.get_list_players()
