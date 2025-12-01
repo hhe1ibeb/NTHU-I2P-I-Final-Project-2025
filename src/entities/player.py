@@ -1,18 +1,32 @@
 from __future__ import annotations
 import pygame as pg
 from .entity import Entity
-from src.core.services import input_manager
+from src.core.services import input_manager, scene_manager
 from src.utils import Position, PositionCamera, GameSettings, Logger, Direction
+from src.interface.components import Overlay, Text
 from src.core import GameManager
 from typing import override
 
 class Player(Entity):
     speed: float = 350.0
     game_manager: GameManager
+    catch_message: Overlay
 
     def __init__(self, x: float, y: float, game_manager: GameManager) -> None:
         super().__init__(x, y, game_manager)
         self.is_teleporting = False
+        
+        catch_text = Text(
+            "Found a pokemon! Press C to catch",
+            "Minecraft.ttf",
+            30, 150, 550
+        )
+        self.catch_message = Overlay(
+            "UI/raw/UI_Flat_Frame01a.png",
+            0, 0, 800, 200, 0,
+            False,
+            [catch_text]
+        )
 
     @override
     def update(self, dt: float) -> None:
@@ -69,11 +83,38 @@ class Player(Entity):
                 return
         else:
             self.is_teleporting = False
-                
+
+        player_rect = pg.Rect(int(self.position.x), int(self.position.y), GameSettings.TILE_SIZE, GameSettings.TILE_SIZE)
+        if self.game_manager.check_bush(player_rect):
+            if not hasattr(self, "_waiting_to_catch"):
+                self._waiting_to_catch = True
+            else:
+                keys = pg.key.get_pressed()
+                message_x = 200
+                message_y = 600
+                catch_text = Text(
+                    "Found a pokemon! Press C to catch",
+                    "Minecraft.ttf",
+                    30, message_x + 40, message_y + 25
+                )
+                self.catch_message = Overlay(
+                    "UI/raw/UI_Flat_Frame01a.png",
+                    message_x, message_y, 800, 100, 0,
+                    False,
+                    [catch_text]
+                )
+                self.catch_message.display(True)
+                if keys[pg.K_c]:
+                    scene_manager.change_scene("catch")
+        else:
+            self._waiting_to_catch = False
+            self.catch_message.display(False)
+
         super().update(dt)
 
     @override
     def draw(self, screen: pg.Surface, camera: PositionCamera) -> None:
+        self.catch_message.draw(screen)
         super().draw(screen, camera)
         
     @override

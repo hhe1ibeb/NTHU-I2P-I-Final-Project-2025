@@ -13,6 +13,7 @@ class Map:
     # Rendering Properties
     _surface: pg.Surface
     _collision_map: list[pg.Rect]
+    _bush_map: list[pg.Rect]
 
     def __init__(self, path: str, tp: list[Teleport], spawn: Position):
         self.path_name = path
@@ -28,6 +29,7 @@ class Map:
         self._render_all_layers(self._surface)
         # Prebake the collision map
         self._collision_map = self._create_collision_map()
+        self._bush_map = self._create_bush_map()
 
     def update(self, dt: float):
         return
@@ -47,6 +49,9 @@ class Map:
         Hint: use API colliderect and iterate each rectangle to check
         '''
         return any(rect.colliderect(r) for r in self._collision_map)
+    
+    def check_bush(self, rect: pg.Rect) -> bool:
+        return any(rect.colliderect(r) for r in self._bush_map)
         
     def check_teleport(self, pos: Position) -> Teleport | None:
         '''[TODO HACKATHON 6] 
@@ -93,6 +98,16 @@ class Map:
                         Append the collision rectangle to the rects[] array
                         Remember scale the rectangle with the TILE_SIZE from settings
                         '''
+                        rects.append(pg.Rect(x*GameSettings.TILE_SIZE, y*GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
+                        pass
+        return rects
+    
+    def _create_bush_map(self) -> list[pg.Rect]:
+        rects = []
+        for layer in self.tmxdata.visible_layers:
+            if isinstance(layer, pytmx.TiledTileLayer) and ("pokemonbush" in layer.name.lower()):
+                for x, y, gid in layer:
+                    if gid != 0:
                         rects.append(pg.Rect(x*GameSettings.TILE_SIZE, y*GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
                         pass
         return rects

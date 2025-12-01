@@ -1,1 +1,1 @@
-from .managers import GameManager, OnlineManager
+from .managers import GameManager, OnlineManager, BattleManager, CatchManager

@@ -8,7 +8,7 @@ from src.utils import Logger, PositionCamera, GameSettings, Position
 from src.core.services import sound_manager
 from src.sprites import Sprite
 from src.interface.components import Button, Overlay
-from src.scenes.scene_components import create_settings_overlay, create_backpack_overlay
+from src.scenes.scene_components import create_settings_overlay, BackpackOverlay
 from typing import override
 
 class GameScene(Scene):
@@ -56,15 +56,19 @@ class GameScene(Scene):
 
         # overlays
         self.settings_overlay = create_settings_overlay(self.game_manager)
-        self.backpack_overlay = create_backpack_overlay(game_manager=self.game_manager)
-        
+        self.backpack_overlay = BackpackOverlay(self.game_manager)
         
     @override
     def enter(self) -> None:
         sound_manager.play_bgm("RBY 103 Pallet Town.ogg")
         if self.online_manager:
             self.online_manager.enter()
+
+        self.game_manager = GameManager.load("saves/game0.json")
         
+        self.backpack_overlay.game_manager = self.game_manager
+        self.settings_overlay.game_manager = self.game_manager
+
     @override
     def exit(self) -> None:
         if self.online_manager:
@@ -72,16 +76,13 @@ class GameScene(Scene):
         
     @override
     def update(self, dt: float):
-        # Check if there is assigned next scene
         self.game_manager.try_switch_map()
         
-        # Update player and other data
         if self.game_manager.player:
             self.game_manager.player.update(dt)
         for enemy in self.game_manager.current_enemy_trainers:
             enemy.update(dt)
             
-        # Update others
         self.game_manager.bag.update(dt)
         self.backpack_button.update(dt)
         self.settings_button.update(dt)

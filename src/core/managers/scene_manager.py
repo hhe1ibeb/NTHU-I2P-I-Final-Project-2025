@@ -16,7 +16,7 @@ class SceneManager:
     def register_scene(self, name: str, scene: Scene) -> None:
         self._scenes[name] = scene
         
-    def change_scene(self, scene_name: str) -> None:
+    def change_scene(self, scene_name: str, **kwargs) -> None:
         if scene_name in self._scenes:
             Logger.info(f"Changing scene to '{scene_name}'")
             self._next_scene = scene_name

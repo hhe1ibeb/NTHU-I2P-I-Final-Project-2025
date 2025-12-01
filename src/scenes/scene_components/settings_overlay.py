@@ -61,7 +61,7 @@ def create_settings_overlay(game_manager: GameManager):
     save_button = Button(
         "UI/button_save.png", "UI/button_save_hover.png",
         px - 50, py + 70, 60, 60,
-        lambda: game_manager.save("saves/game1.json") # TODO: Game index?
+        lambda: game_manager.save("saves/game0.json") # TODO: Game index?
     )
 
     save_text = Text(
@@ -74,7 +74,7 @@ def create_settings_overlay(game_manager: GameManager):
     load_button = Button(
         "UI/button_load.png", "UI/button_load_hover.png",
         px + 50, py + 70, 60, 60,
-        lambda: game_manager.load("saves/game1.json")
+        lambda: game_manager.load("saves/game0.json")
     )
 
     load_text = Text(

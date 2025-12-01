@@ -1,125 +1,74 @@
 import pygame as pg
-
 from src.utils import GameSettings
-from src.core import GameManager
-from src.core.services import sound_manager
+from src.core.managers.game_manager import GameManager
 from src.interface.components import Text, Overlay, Button, Frame
-from src.sprites import Sprite
 
-def create_backpack_overlay(game_manager: GameManager):
-    bag_dict = game_manager.bag.to_dict()
-    monster_list, items_list = bag_dict["monsters"], bag_dict["items"]
-    
-    overlay_components = []
+class BackpackOverlay(Overlay):
+    def __init__(self, game_manager: GameManager):
+        self.game_manager = game_manager
+        self.px = GameSettings.SCREEN_WIDTH // 2
+        self.py = GameSettings.SCREEN_HEIGHT // 2
+        
+        super().__init__(
+            "UI/raw/UI_Flat_Frame03a.png", 
+            self.px // 3, self.py // 3, 900, 500,
+            160,
+            default_display=False,
+            components=[], 
+            exit_key=[pg.K_ESCAPE]
+        )
+        
+        self.static_components = self._create_static_ui()
+        
+        self.refresh_content()
 
-    px, py = GameSettings.SCREEN_WIDTH // 2, GameSettings.SCREEN_HEIGHT // 2
-    backpack_text = Text(
-        "BACKPACK",
-        "Minecraft.ttf",
-        50, px - 370, py - 190
-    )
-    overlay_components.append(backpack_text)
+    def display(self, show: bool):
+        if show:
+            self.refresh_content()
+        super().display(show)
 
-    monster_text = Text(
-        "Monsters",
-        "Minecraft.ttf",
-        30, px - 370, py - 125,
-        color=(60, 60, 60)
-    )
-    items_text = Text(
-        "Items",
-        "Minecraft.ttf",
-        30, px + 100, py - 125,
-        color=(60, 60, 60)
-    )
-    overlay_components.append(monster_text)
-    overlay_components.append(items_text)
+    def _create_static_ui(self):
+        comps = []
+        comps.append(Text("BACKPACK", "Minecraft.ttf", 50, self.px - 370, self.py - 190))
+        comps.append(Text("Monsters", "Minecraft.ttf", 30, self.px - 370, self.py - 125, color=(60, 60, 60)))
+        comps.append(Text("Items", "Minecraft.ttf", 30, self.px + 100, self.py - 125, color=(60, 60, 60)))
+        comps.append(Button(
+            "UI/button_back.png", "UI/button_back_hover.png",
+            self.px // 3 + 50, self.py // 3 + 420, 50, 50,
+            lambda: self.display(False)
+        ))
+        return comps
 
-    dx, dy = 0, 0
-    for monster in monster_list:
-        container = Frame(
-            "UI/raw/UI_Flat_Banner04a.png",
-            px - 375 + dx, py - 90 + dy, 220, 60
-        )
-        monster_img = Frame(
-            monster["sprite_path"],
-            px - 360 + dx, py - 80 + dy, 40, 40
-        )
-        name_text = Text(
-            monster["name"],
-            "Minecraft.ttf",
-            15,
-            px - 315 + dx, py - 65 + dy
-        )
-        hp_text = Text(
-            f"HP: {monster["hp"]}/{monster["max_hp"]}",
-            "Minecraft.ttf",
-            12,
-            px - 235 + dx, py - 70 + dy,
-            color=(255, 62, 23)
-        )
-        level_text = Text(
-            f"Level: {monster["level"]}",
-            "Minecraft.ttf",
-            12,
-            px - 235 + dx, py - 55 + dy,
-            color=(16, 96, 201)
-        )
-        dy += 65
-        if dy >= 260:
-            dy = 0
-            dx += 230
-        overlay_components.extend([container, monster_img, name_text, hp_text, level_text])
-        pass
+    def refresh_content(self):
+        self.components = self.static_components.copy()
+        
+        bag_dict = self.game_manager.bag.to_dict()
+        monster_list = bag_dict["monsters"]
+        items_list = bag_dict["items"]
 
-    dy = 0
-    for item in items_list:
-        container = Frame(
-            "UI/raw/UI_Flat_Banner04a.png",
-            px + 100, py - 90 + dy, 300, 60
-        )
-        item_img = Frame(
-            item["sprite_path"],
-            px + 125, py - 75 + dy, 35, 35
-        )
-        item_text = Text(
-            item["name"],
-            "Minecraft.ttf",
-            24,
-            px + 170, py - 70 + dy
-        )
-        count_text = Text(
-            f"x {item["count"]}",
-            "Minecraft.ttf",
-            24,
-            px + 300, py - 70 + dy
-        )
-        dy += 65
-        overlay_components.extend([container, item_img, item_text, count_text])
+        dx, dy = 0, 0
+        for monster in monster_list:
+            self.components.extend([
+                Frame("UI/raw/UI_Flat_Banner04a.png", self.px - 375 + dx, self.py - 90 + dy, 220, 60),
+                Frame(monster["sprite_path"], self.px - 360 + dx, self.py - 80 + dy, 40, 40),
+                Text(monster["name"], "Minecraft.ttf", 15, self.px - 315 + dx, self.py - 65 + dy),
+                Text(f"HP: {monster['hp']}/{monster['max_hp']}", "Minecraft.ttf", 12, self.px - 235 + dx, self.py - 70 + dy, color=(255, 62, 23)),
+                Text(f"Level: {monster['level']}", "Minecraft.ttf", 12, self.px - 235 + dx, self.py - 55 + dy, color=(16, 96, 201))
+            ])
+            dy += 65
+            if dy >= 260:
+                dy = 0
+                dx += 230
 
-    exit_text = Text(
-        "Press ESC to exit",
-        "Minecraft.ttf",
-        24, 
-        px // 3 + 120, py // 3 + 435,
-        color=(50, 50, 50)
-    )
-    overlay_components.append(exit_text)
+        dy = 0
+        for item in items_list:
+            if item["count"] <= 0:
+                continue
 
-    exit_button = Button(
-        "UI/button_back.png", "UI/button_back_hover.png",
-        px // 3 + 50, py // 3 + 420, 50, 50,
-        lambda: backpack_overlay.display(False)
-    )
-    overlay_components.append(exit_button)
-    
-    backpack_overlay = Overlay(
-        "UI/raw/UI_Flat_Frame03a.png", 
-        px // 3, py // 3, 900, 500,
-        160,
-        default_display=False,
-        components=overlay_components,
-        exit_key=[pg.K_ESCAPE]
-    )
-    
-    return backpack_overlay
+            self.components.extend([
+                Frame("UI/raw/UI_Flat_Banner04a.png", self.px + 100, self.py - 90 + dy, 300, 60),
+                Frame(item["sprite_path"], self.px + 125, self.py - 75 + dy, 35, 35),
+                Text(item["name"], "Minecraft.ttf", 24, self.px + 170, self.py - 70 + dy),
+                Text(f"x {item['count']}", "Minecraft.ttf", 24, self.px + 300, self.py - 70 + dy)
+            ])
+            dy += 65

@@ -11,6 +11,8 @@ if TYPE_CHECKING:
     from src.data.bag import Bag
 
 class GameManager:
+    file_path: str = "saves/game0.json"
+    
     # Entities
     player: Player | None
     enemy_trainers: dict[str, list[EnemyTrainer]]
@@ -27,7 +29,8 @@ class GameManager:
     def __init__(self, maps: dict[str, Map], start_map: str, 
                  player: Player | None,
                  enemy_trainers: dict[str, list[EnemyTrainer]], 
-                 bag: Bag | None = None):
+                 bag: Bag | None = None, 
+                 file_path: str = ""):
                      
         from src.data.bag import Bag
         # Game Properties
@@ -36,6 +39,7 @@ class GameManager:
         self.player = player
         self.enemy_trainers = enemy_trainers
         self.bag = bag if bag is not None else Bag([], [])
+        self.file_path = file_path
         self.player_pos_on_main = None
         
         # Check If you should change scene
@@ -84,12 +88,18 @@ class GameManager:
                 return True
         
         return False
+
+    def check_bush(self, rect: pg.Rect) -> bool:
+        if self.maps[self.current_map_key].check_bush(rect):
+            return True
         
-    def save(self, path: str) -> None:
+    def save(self, path: str | None = None) -> None:
+        target_path = path if path is not None else self.file_path
+        
         try:
-            with open(path, "w") as f:
+            with open(target_path, "w") as f:
                 json.dump(self.to_dict(), f, indent=2)
-            Logger.info(f"Game saved to {path}")
+            Logger.info(f"Game saved to {target_path}")
         except Exception as e:
             Logger.warning(f"Failed to save game: {e}")
              
@@ -101,7 +111,12 @@ class GameManager:
 
         with open(path, "r") as f:
             data = json.load(f)
-        return cls.from_dict(data)
+            
+        manager = cls.from_dict(data)
+        
+        manager.file_path = path 
+        
+        return manager
 
     def to_dict(self) -> dict[str, object]:
         map_blocks: list[dict[str, object]] = []

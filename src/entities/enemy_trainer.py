@@ -9,7 +9,7 @@ from src.sprites import Sprite
 from src.core import GameManager
 from src.core.services import input_manager, scene_manager
 from src.utils import GameSettings, Direction, Position, PositionCamera
-
+from src.interface.components import Text
 
 class EnemyTrainerClassification(Enum):
     STATIONARY = "stationary"
@@ -24,6 +24,7 @@ class EnemyTrainer(Entity):
     max_tiles: int | None
     _movement: IdleMovement
     warning_sign: Sprite
+    warning_text: Text
     detected: bool
     los_direction: Direction
 
@@ -49,14 +50,27 @@ class EnemyTrainer(Entity):
             raise ValueError("Invalid classification")
         self.warning_sign = Sprite("exclamation.png", (GameSettings.TILE_SIZE // 2, GameSettings.TILE_SIZE // 2))
         self.warning_sign.update_pos(Position(x + GameSettings.TILE_SIZE // 4, y - GameSettings.TILE_SIZE // 2))
+        self.warning_text = Text(
+            "Press Space to Enter Battle", "Minecraft.ttf",
+            20, 500, 500
+        )
         self.detected = False
 
     @override
     def update(self, dt: float) -> None:
         self._movement.update(self, dt)
         self._has_los_to_player()
+        
         if self.detected and input_manager.key_pressed(pygame.K_SPACE):
-            pass
+            battle_data = {
+                "type": "TRAINER",
+                "enemy_sprite": "sprites/sprite9_idle.png", # self.sprite_path
+                "level": 5,
+                "hp": 100
+            }
+            
+            scene_manager.change_scene("battle", **battle_data)
+            
         self.animation.update_pos(self.position)
 
     @override
@@ -64,6 +78,7 @@ class EnemyTrainer(Entity):
         super().draw(screen, camera)
         if self.detected:
             self.warning_sign.draw(screen, camera)
+            self.warning_text.draw(screen)
         if GameSettings.DRAW_HITBOXES:
             los_rect = self._get_los_rect()
             if los_rect is not None:
@@ -82,10 +97,14 @@ class EnemyTrainer(Entity):
         self.los_direction = self.direction
 
     def _get_los_rect(self) -> pygame.Rect | None:
-        '''
-        TODO: Create hitbox to detect line of sight of the enemies towards the player
-        '''
-        return None
+        dir = self.direction.value
+        hitbox = pygame.Rect(
+            self._snap_to_grid(self.position.x) - (dir==3)*(self.max_tiles-1)*GameSettings.TILE_SIZE,
+            self._snap_to_grid(self.position.y) - (dir==1)*(self.max_tiles-1)*GameSettings.TILE_SIZE,
+            GameSettings.TILE_SIZE * (1 + (5 > dir >= 3)*(self.max_tiles - 1)),
+            GameSettings.TILE_SIZE * (1 + (dir <= 2)*(self.max_tiles - 1))
+        )
+        return hitbox
 
     def _has_los_to_player(self) -> None:
         player = self.game_manager.player
@@ -96,11 +115,10 @@ class EnemyTrainer(Entity):
         if los_rect is None:
             self.detected = False
             return
-        '''
-        TODO: Implement line of sight detection
-        If it's detected, set self.detected to True
-        '''
-        self.detected = False
+        if los_rect.colliderect(player.position.x, player.position.y, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE):
+            self.detected = True
+        else:
+            self.detected = False
 
     @classmethod
     @override
