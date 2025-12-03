@@ -43,21 +43,12 @@ class Map:
                 pg.draw.rect(screen, (255, 0, 0), camera.transform_rect(rect), 1)
         
     def check_collision(self, rect: pg.Rect) -> bool:
-        '''
-        [TODO HACKATHON 4]
-        Return True if collide if rect param collide with self._collision_map
-        Hint: use API colliderect and iterate each rectangle to check
-        '''
         return any(rect.colliderect(r) for r in self._collision_map)
     
     def check_bush(self, rect: pg.Rect) -> bool:
         return any(rect.colliderect(r) for r in self._bush_map)
         
     def check_teleport(self, pos: Position) -> Teleport | None:
-        '''[TODO HACKATHON 6] 
-        Teleportation: Player can enter a building by walking into certain tiles defined inside saves/*.json, and the map will be changed
-        Hint: Maybe there is an way to switch the map using something from src/core/managers/game_manager.py called switch_... 
-        '''
         player_tile_x = int(pos.x // GameSettings.TILE_SIZE)
         player_tile_y = int(pos.y // GameSettings.TILE_SIZE)
 
@@ -92,12 +83,6 @@ class Map:
             if isinstance(layer, pytmx.TiledTileLayer) and ("collision" in layer.name.lower() or "house" in layer.name.lower()):
                 for x, y, gid in layer:
                     if gid != 0:
-                        '''
-                        [TODO HACKATHON 4]
-                        rects.append(pg.Rect(...))
-                        Append the collision rectangle to the rects[] array
-                        Remember scale the rectangle with the TILE_SIZE from settings
-                        '''
                         rects.append(pg.Rect(x*GameSettings.TILE_SIZE, y*GameSettings.TILE_SIZE, GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
                         pass
         return rects
