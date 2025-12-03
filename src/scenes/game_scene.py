@@ -8,7 +8,7 @@ from src.utils import Logger, PositionCamera, GameSettings, Position
 from src.core.services import sound_manager
 from src.sprites import Sprite
 from src.interface.components import Button, Overlay
-from src.scenes.scene_components import create_settings_overlay, BackpackOverlay
+from src.scenes.scene_components import SettingsOverlay, BackpackOverlay
 from typing import override
 
 class GameScene(Scene):
@@ -55,9 +55,20 @@ class GameScene(Scene):
         )
 
         # overlays
-        self.settings_overlay = create_settings_overlay(self.game_manager)
+        self.settings_overlay = SettingsOverlay(
+            lambda: self.game_manager.save(),
+            self._load_game
+        )
         self.backpack_overlay = BackpackOverlay(self.game_manager)
-        
+    
+    def _load_game(self):
+        manager = GameManager.load("saves/game0.json")
+        if manager:
+            self.game_manager = manager
+            Logger.info("Game loaded successfully")
+        else:
+            Logger.warning("Failed to load game")
+
     @override
     def enter(self) -> None:
         sound_manager.play_bgm("RBY 103 Pallet Town.ogg")

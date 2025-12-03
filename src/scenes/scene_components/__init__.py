@@ -1,4 +1,4 @@
-from .settings_overlay import create_settings_overlay
+from .settings_overlay import SettingsOverlay
 from .backpack_overlay import BackpackOverlay
 from .selection_overlay import create_selection_overlay
 from .battle_action_overlay import create_battle_action_overlay

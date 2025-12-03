@@ -100,6 +100,7 @@ class GameManager:
             with open(target_path, "w") as f:
                 json.dump(self.to_dict(), f, indent=2)
             Logger.info(f"Game saved to {target_path}")
+            print(self.player.to_dict())
         except Exception as e:
             Logger.warning(f"Failed to save game: {e}")
              
@@ -115,7 +116,7 @@ class GameManager:
         manager = cls.from_dict(data)
         
         manager.file_path = path 
-        
+
         return manager
 
     def to_dict(self) -> dict[str, object]:
