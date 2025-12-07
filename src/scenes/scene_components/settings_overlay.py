@@ -125,29 +125,3 @@ class SettingsOverlay(Overlay):
     
     def display(self, state):
         return super().display(state)
-    
-    # def _load_game(self):
-
-
-
-# def create_settings_overlay(game_manager: GameManager):
-#     # settings overlay
-    
-    
-#     settings_overlay = Overlay(
-        # "UI/raw/UI_Flat_Frame03a.png", 
-        # px // 3, py // 3, 900, 500,
-        # 160,
-        # default_display=False,
-        # components=[
-        #     title_text, 
-        #     volume_text, volume_amount, volume_slider,
-        #     audio_mute_text, audio_mute_indicate, audio_mute_toggle, 
-        #     save_button, load_button,
-        #     save_text, load_text,
-        #     exit_button, exit_text
-        # ],
-        # exit_key=[pg.K_ESCAPE]
-#     )
-
-#     return settings_overlay
