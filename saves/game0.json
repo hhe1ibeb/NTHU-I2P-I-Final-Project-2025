@@ -40,6 +40,15 @@
           "facing": "UP",
           "max_tiles": 2
         }
+      ],
+      "shop_npcs": [
+        {
+          "x": 10.0,
+          "y": 30.0,
+          "classification": "stationary",
+          "facing": "RIGHT",
+          "max_tiles": 2
+        }
       ]
     },
     {
@@ -65,7 +74,8 @@
         "x": 12,
         "y": 12
       },
-      "enemy_trainers": []
+      "enemy_trainers": [],
+      "shop_npcs": []
     },
     {
       "path": "house.tmx",
@@ -90,7 +100,8 @@
         "x": 12,
         "y": 12
       },
-      "enemy_trainers": []
+      "enemy_trainers": [],
+      "shop_npcs": []
     }
   ],
   "current_map": "map.tmx",
