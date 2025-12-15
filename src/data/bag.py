@@ -11,6 +11,13 @@ class Bag:
         self._monsters_data = monsters_data if monsters_data else []
         self._items_data = items_data if items_data else []
 
+    def add_item(self, item_name: str, amount: int = 1) -> None:
+        for item in self._items_data:
+            if item.get("name") == item_name:
+                item["count"] = item.get("count", 0) + amount
+                return
+        self._items_data.append({"name": item_name, "count": amount, "sprite_path": "items/default.png"}) # Fallback sprite
+
     def add_monster(self, monster_data: dict):
         self._monsters_data.append(monster_data)
 
@@ -29,6 +36,12 @@ class Bag:
                     return True
                 else:
                     return False
+        return False
+
+    def remove_monster(self, index: int) -> bool:
+        if 0 <= index < len(self._monsters_data):
+            self._monsters_data.pop(index)
+            return True
         return False
 
     def update(self, dt: float):

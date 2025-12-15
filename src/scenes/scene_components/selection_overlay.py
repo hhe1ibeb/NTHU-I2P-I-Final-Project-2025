@@ -31,14 +31,14 @@ def create_selection_overlay(game_manager: GameManager, on_select_monster):
             px - 410 + dx, py - 190 + dy, 100, 100
         )
         level_text = Text(
-            f"Level: {monster["level"]}",
+            f"Level: {monster['level']}",
             "Minecraft.ttf",
             20,
             px - 400 + dx, py - 80 + dy,
             color=(16, 96, 201)
         )
         hp_text = Text(
-            f"HP: {monster["hp"]}/{monster["max_hp"]}",
+            f"HP: {monster['hp']}/{monster['max_hp']}",
             "Minecraft.ttf",
             20,
             px - 410 + dx, py - 50 + dy,

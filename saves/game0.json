@@ -47,7 +47,73 @@
           "y": 30.0,
           "classification": "stationary",
           "facing": "RIGHT",
-          "max_tiles": 2
+          "max_tiles": 2,
+          "products": {
+            "monsters": [
+              {
+              "name": "Dragonite",
+              "hp": 220,
+              "max_hp": 220,
+              "level": 40,
+              "price": 2000,
+              "sprite_path": "menu_sprites/menusprite6.png"
+            },
+            {
+              "name": "Charizard",
+              "hp": 200,
+              "max_hp": 200,
+              "level": 36,
+              "price": 3000,
+              "sprite_path": "menu_sprites/menusprite1.png"
+            },
+            {
+              "name": "Blastoise",
+              "hp": 210,
+              "max_hp": 210,
+              "level": 36,
+              "price": 2800,
+              "sprite_path": "menu_sprites/menusprite2.png"
+             },
+            {
+              "name": "Venusaur",
+              "hp": 230,
+              "max_hp": 230,
+              "level": 36,
+              "price": 2700,
+              "sprite_path": "menu_sprites/menusprite3.png"
+            },
+            {
+              "name": "Pikachu",
+              "hp": 150,
+              "max_hp": 150,
+              "level": 15,
+              "price": 500,
+              "sprite_path": "menu_sprites/menusprite4.png"
+            },
+            {
+              "name": "Snorlax",
+              "hp": 300,
+              "max_hp": 300,
+              "level": 30,
+              "price": 2500,
+              "sprite_path": "menu_sprites/menusprite5.png"
+            }
+            ],
+            "items": [
+              {
+                "name": "Potion",
+                "count": 5,
+                "price": 50,
+                "sprite_path": "ingame_ui/potion.png"
+              },
+              {
+                "name": "Pokeball",
+                "count": 10,
+                "price": 100,
+                "sprite_path": "ingame_ui/ball.png"
+              }
+            ]
+          }
         }
       ]
     },
@@ -145,13 +211,6 @@
         "max_hp": 140,
         "level": 28,
         "sprite_path": "menu_sprites/menusprite5.png"
-      },
-      {
-        "name": "Dragonite",
-        "hp": 180,
-        "max_hp": 220,
-        "level": 40,
-        "sprite_path": "menu_sprites/menusprite6.png"
       }
     ],
     "items": [
@@ -162,7 +221,7 @@
       },
       {
         "name": "Coins",
-        "count": 3,
+        "count": 100,
         "sprite_path": "ingame_ui/coin.png"
       },
       {

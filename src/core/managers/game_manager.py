@@ -8,6 +8,7 @@ if TYPE_CHECKING:
     from src.maps.map import Map
     from src.entities.player import Player
     from src.entities.enemy_trainer import EnemyTrainer
+    from src.entities.shop_npc import ShopNPC
     from src.data.bag import Bag
 
 class GameManager:
@@ -16,6 +17,7 @@ class GameManager:
     # Entities
     player: Player | None
     enemy_trainers: dict[str, list[EnemyTrainer]]
+    shop_npcs: dict[str, list[ShopNPC]]
     bag: "Bag"
     
     # Map properties
@@ -29,6 +31,7 @@ class GameManager:
     def __init__(self, maps: dict[str, Map], start_map: str, 
                  player: Player | None,
                  enemy_trainers: dict[str, list[EnemyTrainer]], 
+                 shop_npcs: dict[str, list[ShopNPC]],
                  bag: Bag | None = None, 
                  file_path: str = ""):
                      
@@ -38,6 +41,7 @@ class GameManager:
         self.current_map_key = start_map
         self.player = player
         self.enemy_trainers = enemy_trainers
+        self.shop_npcs = shop_npcs
         self.bag = bag if bag is not None else Bag([], [])
         self.file_path = file_path
         self.player_pos_on_main = None
@@ -53,7 +57,11 @@ class GameManager:
     @property
     def current_enemy_trainers(self) -> list[EnemyTrainer]:
         return self.enemy_trainers[self.current_map_key]
-        
+    
+    @property
+    def current_shop_npcs(self) -> list[ShopNPC]:
+        return self.shop_npcs[self.current_map_key]
+
     @property
     def current_teleporter(self) -> list[Teleport]:
         return self.maps[self.current_map_key].teleporters
@@ -86,7 +94,9 @@ class GameManager:
         for entity in self.enemy_trainers[self.current_map_key]:
             if rect.colliderect(entity.animation.rect):
                 return True
-        
+        for entity in self.shop_npcs[self.current_map_key]:
+            if rect.colliderect(entity.animation.rect):
+                return True
         return False
 
     def check_bush(self, rect: pg.Rect) -> bool:
@@ -124,6 +134,7 @@ class GameManager:
         for key, m in self.maps.items():
             block = m.to_dict()
             block["enemy_trainers"] = [t.to_dict() for t in self.enemy_trainers.get(key, [])]
+            block["shop_npcs"] = [t.to_dict() for t in self.shop_npcs.get(key, [])]
             map_blocks.append(block)
         return {
             "map": map_blocks,
@@ -137,6 +148,7 @@ class GameManager:
         from src.maps.map import Map
         from src.entities.player import Player
         from src.entities.enemy_trainer import EnemyTrainer
+        from src.entities.shop_npc import ShopNPC
         from src.data.bag import Bag
         
         Logger.info("Loading maps")
@@ -144,6 +156,7 @@ class GameManager:
         maps: dict[str, Map] = {}
         player_spawns: dict[str, Position] = {}
         trainers: dict[str, list[EnemyTrainer]] = {}
+        shop_npcs: dict[str, list[ShopNPC]] = {}
 
         for entry in maps_data:
             path = entry["path"]
@@ -159,21 +172,27 @@ class GameManager:
             maps, current_map,
             None, # Player
             trainers,
+            shop_npcs,
             bag=None
         )
         gm.current_map_key = current_map
         
+        Logger.info("Loading bag")
+        from src.data.bag import Bag as _Bag
+        gm.bag = Bag.from_dict(data.get("bag", {})) if data.get("bag") else _Bag([], [])
+
         Logger.info("Loading enemy trainers")
         for m in data["map"]:
             raw_data = m["enemy_trainers"]
             gm.enemy_trainers[m["path"]] = [EnemyTrainer.from_dict(t, gm) for t in raw_data]
+
+        Logger.info("Loading shop npcs")
+        for m in data["map"]:
+            raw_data = m["shop_npcs"]
+            gm.shop_npcs[m["path"]] = [ShopNPC.from_dict(t, gm) for t in raw_data]
         
         Logger.info("Loading Player")
         if data.get("player"):
             gm.player = Player.from_dict(data["player"], gm)
-        
-        Logger.info("Loading bag")
-        from src.data.bag import Bag as _Bag
-        gm.bag = Bag.from_dict(data.get("bag", {})) if data.get("bag") else _Bag([], [])
 
         return gm

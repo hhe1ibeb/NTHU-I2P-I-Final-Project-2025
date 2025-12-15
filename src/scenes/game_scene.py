@@ -93,6 +93,8 @@ class GameScene(Scene):
             self.game_manager.player.update(dt)
         for enemy in self.game_manager.current_enemy_trainers:
             enemy.update(dt)
+        for shop_npc in self.game_manager.current_shop_npcs:
+            shop_npc.update(dt)
             
         self.game_manager.bag.update(dt)
         self.backpack_button.update(dt)
@@ -118,6 +120,8 @@ class GameScene(Scene):
             self.game_manager.current_map.draw(screen, camera)
         for enemy in self.game_manager.current_enemy_trainers:
             enemy.draw(screen, camera)
+        for shop_npc in self.game_manager.current_shop_npcs:
+            shop_npc.draw(screen, camera)
 
         self.game_manager.bag.draw(screen)
         self.backpack_button.draw(screen)
