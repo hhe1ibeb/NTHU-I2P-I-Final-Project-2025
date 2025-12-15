@@ -46,6 +46,7 @@ class Player(Entity):
             dis.y += 1
 
         if dis.x != 0 or dis.y != 0:
+            self.is_moving = True
             dis_mag = (dis.x ** 2 + dis.y ** 2) ** 0.5 
 
             move_x = (dis.x * self.speed * dt) / dis_mag
@@ -69,6 +70,8 @@ class Player(Entity):
                     self.position.y = (player_rect.y // GameSettings.TILE_SIZE) * GameSettings.TILE_SIZE
                 if move_y < 0:
                     self.position.y = (player_rect.y // GameSettings.TILE_SIZE + 1) * GameSettings.TILE_SIZE
+        else:
+             self.is_moving = False
 
         # Check teleportation
         tp = self.game_manager.current_map.check_teleport(self.position)

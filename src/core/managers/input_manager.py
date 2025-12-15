@@ -14,7 +14,8 @@ class InputManager:
         self._pressed_mouse: set[MouseBtn] = set()
         self._released_mouse: set[MouseBtn] = set()
         self.mouse_pos: tuple[int, int] = (0, 0)
-        self.mouse_wheel: int = 0  # +1 / -1
+        # Text Input
+        self.text_input: str = ""
 
     def reset(self) -> None:
         self._pressed_keys.clear()
@@ -22,6 +23,7 @@ class InputManager:
         self._pressed_mouse.clear()
         self._released_mouse.clear()
         self.mouse_wheel = 0
+        self.text_input = ""
         
     def handle_events(self, e: pg.event.Event) -> None:
         if e.type == pg.MOUSEMOTION:
@@ -40,6 +42,8 @@ class InputManager:
             # Logger.debug(f"Key {e.key} pressed")
             self._down_keys.add(e.key)
             self._pressed_keys.add(e.key)
+            if hasattr(e, "unicode") and e.unicode and e.unicode.isprintable():
+                self.text_input += e.unicode
         elif e.type == pg.KEYUP:
             # Logger.debug(f"Key {e.key} released")
             self._down_keys.discard(e.key)
