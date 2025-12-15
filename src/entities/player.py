@@ -105,6 +105,7 @@ class Player(Entity):
                 )
                 self.catch_message.display(True)
                 if keys[pg.K_c]:
+                    self.game_manager.save()
                     scene_manager.change_scene("catch")
         else:
             self._waiting_to_catch = False

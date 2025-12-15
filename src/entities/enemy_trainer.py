@@ -68,7 +68,7 @@ class EnemyTrainer(Entity):
                 "level": 5,
                 "hp": 100
             }
-            
+            self.game_manager.save()
             scene_manager.change_scene("battle", **battle_data)
             
         self.animation.update_pos(self.position)
