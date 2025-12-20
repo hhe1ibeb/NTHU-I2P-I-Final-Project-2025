@@ -28,6 +28,8 @@ class EnemyTrainer(Entity):
     detected: bool
     los_direction: Direction
 
+    pokemon_name: str | None
+
     @override
     def __init__(
         self,
@@ -37,10 +39,13 @@ class EnemyTrainer(Entity):
         classification: EnemyTrainerClassification = EnemyTrainerClassification.STATIONARY,
         max_tiles: int | None = 2,
         facing: Direction | None = None,
+        pokemon_name: str | None = None
     ) -> None:
         super().__init__(x, y, game_manager)
         self.classification = classification
         self.max_tiles = max_tiles
+        self.pokemon_name = pokemon_name
+        
         if classification == EnemyTrainerClassification.STATIONARY:
             self._movement = IdleMovement()
             if facing is None:
@@ -62,11 +67,25 @@ class EnemyTrainer(Entity):
         self._has_los_to_player()
         
         if self.detected and input_manager.key_pressed(pygame.K_SPACE):
+            import random
+            from src.core.pokemon_data import POKEMON_SPRITES, POKEMON_ELEMENTS
+            
+            name = self.pokemon_name
+            
+            # If no specific name or name invalid, pick random
+            if not name or name not in POKEMON_SPRITES:
+                available_pokemon = list(POKEMON_SPRITES.keys())
+                name = random.choice(available_pokemon)
+                
+            sprite_path = POKEMON_SPRITES[name]
+            
             battle_data = {
                 "type": "TRAINER",
-                "enemy_sprite": "sprites/sprite9_idle.png", # self.sprite_path
+                "enemy_sprite": sprite_path,
+                "name": name, 
                 "level": 5,
-                "hp": 100
+                "hp": 100,
+                "manager": self.game_manager
             }
             self.game_manager.save()
             scene_manager.change_scene("battle", **battle_data)
@@ -134,6 +153,9 @@ class EnemyTrainer(Entity):
                 facing = facing_val
         if facing is None and classification == EnemyTrainerClassification.STATIONARY:
             facing = Direction.DOWN
+            
+        pokemon_name = data.get("pokemon_name") # Load specific pokemon name
+        
         return cls(
             data["x"] * GameSettings.TILE_SIZE,
             data["y"] * GameSettings.TILE_SIZE,
@@ -141,6 +163,7 @@ class EnemyTrainer(Entity):
             classification,
             max_tiles,
             facing,
+            pokemon_name
         )
 
     @override
@@ -149,4 +172,5 @@ class EnemyTrainer(Entity):
         base["classification"] = self.classification.value
         base["facing"] = self.direction.name
         base["max_tiles"] = self.max_tiles
+        base["pokemon_name"] = self.pokemon_name
         return base

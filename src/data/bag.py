@@ -16,7 +16,7 @@ class Bag:
             if item.get("name") == item_name:
                 item["count"] = item.get("count", 0) + amount
                 return
-        self._items_data.append({"name": item_name, "count": amount, "sprite_path": "items/default.png"}) # Fallback sprite
+        self._items_data.append({"name": item_name, "count": amount, "sprite_path": "ingame_ui/potion.png"}) # Fallback sprite
 
     def add_monster(self, monster_data: dict):
         self._monsters_data.append(monster_data)

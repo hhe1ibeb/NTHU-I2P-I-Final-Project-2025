@@ -77,6 +77,10 @@ class GameManager:
             self.player_pos_on_main = org_pos
             
     def try_switch_map(self) -> None:
+        # Prevent accidental map switching during auto-navigation
+        if self.player and getattr(self.player, "navigation_path", None):
+            return
+
         if self.should_change_scene:
             self.current_map_key = self.next_map
             self.next_map = ""
@@ -180,6 +184,14 @@ class GameManager:
         Logger.info("Loading bag")
         from src.data.bag import Bag as _Bag
         gm.bag = Bag.from_dict(data.get("bag", {})) if data.get("bag") else _Bag([], [])
+        
+        # Inject starter items for testing/gameplay if empty or just to ensure availability
+        if gm.bag.get_item_count("Heal Potion") == 0:
+            gm.bag.add_item("Heal Potion", 5)
+        if gm.bag.get_item_count("Strength Potion") == 0:
+            gm.bag.add_item("Strength Potion", 5)
+        if gm.bag.get_item_count("Defense Potion") == 0:
+            gm.bag.add_item("Defense Potion", 5)
 
         Logger.info("Loading enemy trainers")
         for m in data["map"]:

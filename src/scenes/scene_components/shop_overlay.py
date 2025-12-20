@@ -227,17 +227,17 @@ class ShopOverlay(Overlay):
                                  overlay_x + 100, row_y + 15, color=(0, 0, 0)))
             
             components.append(Text(f"+${sell_price}", "Minecraft.ttf", 25, 
-                                 overlay_x + 300, row_y + 15, color=(0, 100, 0)))
+                                 overlay_x + 400, row_y + 15, color=(0, 100, 0)))
             
             def make_sell_item_action(n=item_name, p=sell_price):
                 return lambda: self._sell_item(n, p)
 
             sell_btn = Button(
                 "UI/raw/UI_Flat_Button01a_2.png", "UI/raw/UI_Flat_Button01a_1.png",
-                overlay_x + 500, row_y, 100, 50,
+                overlay_x + 650, row_y, 100, 50,
                 make_sell_item_action()
             )
-            sell_label = Text("Sell", "Minecraft.ttf", 20, overlay_x + 525, row_y + 15)
+            sell_label = Text("Sell", "Minecraft.ttf", 20, overlay_x + 675, row_y + 15)
             
             components.extend([sell_btn, sell_label])
             current_row_idx += 1
@@ -265,17 +265,17 @@ class ShopOverlay(Overlay):
                                  overlay_x + 100, row_y + 15, color=(0, 0, 0)))
             
             components.append(Text(f"+${sell_price}", "Minecraft.ttf", 25, 
-                                 overlay_x + 300, row_y + 15, color=(0, 100, 0)))
+                                 overlay_x + 400, row_y + 15, color=(0, 100, 0)))
             
             def make_sell_monster_action(idx=i, p=sell_price):
                 return lambda: self._sell_monster(idx, p)
 
             sell_btn = Button(
                 "UI/raw/UI_Flat_Button01a_2.png", "UI/raw/UI_Flat_Button01a_1.png",
-                overlay_x + 500, row_y, 100, 50,
+                overlay_x + 650, row_y, 100, 50,
                 make_sell_monster_action()
             )
-            sell_label = Text("Sell", "Minecraft.ttf", 20, overlay_x + 525, row_y + 15)
+            sell_label = Text("Sell", "Minecraft.ttf", 20, overlay_x + 675, row_y + 15)
             
             components.extend([sell_btn, sell_label])
             current_row_idx += 1

@@ -27,10 +27,44 @@ class Player(Entity):
             False,
             [catch_text]
         )
+        self.navigation_path: list[Position] = []
 
     @override
     def update(self, dt: float) -> None:
         dis = Position(0, 0)
+        
+        # Navigation Logic
+        if self.navigation_path:
+            # If user presses keys, cancel navigation
+            if (input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a) or
+                input_manager.key_down(pg.K_RIGHT) or input_manager.key_down(pg.K_d) or
+                input_manager.key_down(pg.K_UP) or input_manager.key_down(pg.K_w) or
+                input_manager.key_down(pg.K_DOWN) or input_manager.key_down(pg.K_s)):
+                self.navigation_path = []
+            else:
+                # Auto-move towards next point
+                if len(self.navigation_path) > 0:
+                    target = self.navigation_path[0]
+                    # Simple distance check
+                    if self.position.distance_to(target) < 5.0: # 5 pixels tolerance
+                        self.navigation_path.pop(0)
+                        if self.navigation_path:
+                            target = self.navigation_path[0]
+                    
+                    if self.navigation_path:
+                        dx = target.x - self.position.x
+                        dy = target.y - self.position.y
+                        
+                        # Set direction for animation
+                        if abs(dx) > abs(dy):
+                            if dx > 0: self.direction = Direction.RIGHT
+                            else: self.direction = Direction.LEFT
+                        else:
+                            if dy > 0: self.direction = Direction.DOWN
+                            else: self.direction = Direction.UP
+                            
+                        dis.x = dx
+                        dis.y = dy
 
         if input_manager.key_down(pg.K_LEFT) or input_manager.key_down(pg.K_a):
             self.direction = Direction.LEFT

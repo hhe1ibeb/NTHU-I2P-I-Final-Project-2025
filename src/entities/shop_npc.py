@@ -69,7 +69,7 @@ class ShopNPC(Entity):
             "Pokeball": 100,
             "Super Potion": 150,
             "Great Ball": 200,
-            "Dragonite": 9999, # Just in case monsters are sold
+            "Dragonite": 9999,
         }
         
         self.shop_items = {}

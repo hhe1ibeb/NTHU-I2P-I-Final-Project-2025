@@ -5,12 +5,15 @@ import time
 from src.scenes.scene import Scene
 from src.core import GameManager, OnlineManager
 from src.utils import Logger, PositionCamera, GameSettings, Position
-from src.core.services import sound_manager
+from src.core.services import sound_manager, resource_manager
 from src.sprites import Sprite
 from src.interface.components import Button, Overlay
-from src.scenes.scene_components import SettingsOverlay, BackpackOverlay
+from src.scenes.scene_components import NavigationOverlay, SettingsOverlay, BackpackOverlay
 from src.interface.components.chat_overlay import ChatOverlay
 from typing import override
+import math
+
+from src.interface.components.minimap import Minimap
 
 class GameScene(Scene):
     game_manager: GameManager
@@ -20,10 +23,15 @@ class GameScene(Scene):
     # fixed buttons
     backpack_button: Button
     settings_button: Button
+    navigation_button: Button
 
     # overlays
     backpack_overlay: Overlay
     settings_overlay: Overlay
+    navigation_overlay: NavigationOverlay
+    
+    # Minimap
+    minimap: Minimap
 
     def __init__(self):
         super().__init__()
@@ -63,6 +71,13 @@ class GameScene(Scene):
             self._load_game
         )
         self.backpack_overlay = BackpackOverlay(self.game_manager)
+
+        self.navigation_button = Button(
+            "UI/button_shop.png", "UI/button_shop_hover.png", 
+            px + 390, py - 350, 70, 70,
+            lambda: self.navigation_overlay.display(True)
+        )
+        self.navigation_overlay = NavigationOverlay(self.game_manager, self._on_navigate)
         
         self.chat_overlay = None
         if self.online_manager:
@@ -70,6 +85,17 @@ class GameScene(Scene):
                 send_callback=self.online_manager.send_chat,
                 get_messages=self.online_manager.get_recent_chat
             )
+            
+        # Minimap (Top-Left, 200x200)
+        self.minimap = Minimap(20, 20, 200, 200, self.game_manager)
+
+        # Navigation Arrow
+        self.arrow_img = resource_manager.get_image("UI/raw/UI_Flat_IconArrow01a.png")
+        self.arrow_img = pg.transform.scale(self.arrow_img, (GameSettings.TILE_SIZE, GameSettings.TILE_SIZE))
+    
+    def _on_navigate(self, path: list[Position]):
+        if self.game_manager.player:
+            self.game_manager.player.navigation_path = path
     
     def _load_game(self):
         manager = GameManager.load("saves/game0.json")
@@ -89,6 +115,12 @@ class GameScene(Scene):
         
         self.backpack_overlay.game_manager = self.game_manager
         self.settings_overlay.game_manager = self.game_manager
+        self.navigation_overlay.game_manager = self.game_manager
+        
+        # Update minimap manager ref
+        self.minimap.game_manager = self.game_manager
+        # Force refresh
+        self.minimap.current_map_name = "" 
 
     @override
     def exit(self) -> None:
@@ -99,18 +131,14 @@ class GameScene(Scene):
     def update(self, dt: float):
         self.game_manager.try_switch_map()
         
+        # Update minimap
+        self.minimap.update()
+        
         if self.game_manager.player:
             # Block player movement if chat is open
             if not (self.chat_overlay and self.chat_overlay.is_open):
                 self.game_manager.player.update(dt)
             else:
-                # Still allow catch message update if needed, but for now just skip full update to freeze movement
-                # But we might need animations to run? 
-                # If we skip update, animation stops. 
-                # Better: Allow update but ensure player knows input is blocked?
-                # For now, freezing completely is the requested behavior "disable wasd".
-                # If we want animations (like idle) to continue, we'd need to modify Player.update to take a 'input_blocked' flag.
-                # Given the constraints, skipping update is the safest quick fix to disable control.
                 pass
         for enemy in self.game_manager.current_enemy_trainers:
             enemy.update(dt)
@@ -120,8 +148,10 @@ class GameScene(Scene):
         self.game_manager.bag.update(dt)
         self.backpack_button.update(dt)
         self.settings_button.update(dt)
+        self.navigation_button.update(dt)
         self.backpack_overlay.update(dt)
         self.settings_overlay.update(dt)
+        self.navigation_overlay.update(dt)
         if self.chat_overlay:
             from src.core.services import input_manager
             import pygame as pg
@@ -191,6 +221,27 @@ class GameScene(Scene):
             camera = PositionCamera(0, 0)
             self.game_manager.current_map.draw(screen, camera)
             
+        # Draw Navigation Path
+        if self.game_manager.player and self.game_manager.player.navigation_path:
+            path = self.game_manager.player.navigation_path
+            if len(path) > 1:
+                for i in range(len(path) - 1):
+                    p1 = path[i]
+                    p2 = path[i+1]
+                    
+                    dx = p2.x - p1.x
+                    dy = p2.y - p1.y
+                    
+                    # Calculate angle using atan2
+                    # atan2(-dy, dx) because y is down in screen coordinates
+                    angle_rad = math.atan2(-dy, dx)
+                    angle_deg = math.degrees(angle_rad)
+                    
+                    angle = angle_deg
+                    
+                    rotated = pg.transform.rotate(self.arrow_img, angle)
+                    screen.blit(rotated, camera.transform_position(p1))
+            
         # Draw online players
         if self.online_manager and self.game_manager.player:
             if self.game_manager.current_map:
@@ -225,7 +276,13 @@ class GameScene(Scene):
         self.game_manager.bag.draw(screen)
         self.backpack_button.draw(screen)
         self.settings_button.draw(screen)
+        self.navigation_button.draw(screen)
         self.backpack_overlay.draw(screen)
         self.settings_overlay.draw(screen)
+        self.navigation_overlay.draw(screen)
+        
+        # Minimap
+        self.minimap.draw(screen)
+        
         if self.chat_overlay:
             self.chat_overlay.draw(screen)

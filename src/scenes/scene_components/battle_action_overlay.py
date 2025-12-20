@@ -2,7 +2,7 @@ import pygame as pg
 
 from src.interface.components import Button, Overlay, Text
 
-def create_battle_action_overlay(on_attack, on_run):
+def create_battle_action_overlay(on_attack, on_run, on_bag):
     button_width = 200
     button_height = 60
     overlay_width = 1280
@@ -57,7 +57,28 @@ def create_battle_action_overlay(on_attack, on_run):
         run_y + 25
     )
 
-    overlay_components = [message_text, attack_button, attack_text, run_button, run_text]
+    bag_x = overlay_x + 1020
+    bag_y = overlay_y + 60
+
+    bag_button = Button(
+        "UI/raw/UI_Flat_Button01a_2.png",
+        "UI/raw/UI_Flat_Button01a_1.png",
+        bag_x,
+        bag_y,
+        button_width,
+        button_height,
+        on_bag
+    )
+    
+    bag_text = Text(
+        "Bag",
+        "Minecraft.ttf",
+        30,
+        bag_x + 60,
+        bag_y + 25
+    )
+
+    overlay_components = [message_text, attack_button, attack_text, run_button, run_text, bag_button, bag_text]
 
     overlay = Overlay(
         "UI/raw/UI_Flat_Frame01a.png",

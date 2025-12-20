@@ -8,6 +8,7 @@ class SceneManager:
     _scenes: dict[str, Scene]
     _current_scene: Scene | None = None
     _next_scene: str | None = None
+    _next_scene_kwargs: dict = {}
     
     def __init__(self):
         Logger.info("Initializing SceneManager")
@@ -20,6 +21,7 @@ class SceneManager:
         if scene_name in self._scenes:
             Logger.info(f"Changing scene to '{scene_name}'")
             self._next_scene = scene_name
+            self._next_scene_kwargs = kwargs
         else:
             raise ValueError(f"Scene '{scene_name}' not found")
             
@@ -49,8 +51,9 @@ class SceneManager:
         # Enter new scene
         if self._current_scene:
             Logger.info(f"Entering {self._next_scene} scene")
-            self._current_scene.enter()
+            self._current_scene.enter(**self._next_scene_kwargs)
             
         # Clear the transition request
         self._next_scene = None
+        self._next_scene_kwargs = {}
         
